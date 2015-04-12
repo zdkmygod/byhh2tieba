@@ -1,0 +1,242 @@
+/*in bbsnewtcon*/
+/*don't display old style*/
+#main>#title, #main>hr{
+  display:none;
+}
+/*body>#main>#post*/
+body{
+  background: #FFF;
+}
+body>div{
+    display:none;
+}
+#main{
+  background: url(http://tb2.bdstatic.com/tb/static-ppb/img/bright_default_skin_2a916f3.jpg) no-repeat top center;;
+}
+#post{
+  width:980px;
+  margin: 0 auto;
+  background: #F5F7FA;
+}
+/*#post>(#post_top=#post_main=#post_foot)*/
+#post_top{
+    height:120px;
+}
+#post_main{
+    width:980px;
+}
+#post>#post_foot{
+    height:120px;
+}
+/*#post_main>(#post_main_notside=#post_main_side)*/
+#post_main_notside{
+    width:739px;
+}
+#post_main_side{
+    width:240px;
+}
+/*post_main_notside>(#title=.articletopinfo=.divarticle=p)*/
+#post_main_notside>p{
+  margin:0px;
+}
+#post_main_notside .divarticle{
+  width: 739px;
+  background: #fff;
+  border: 0px;
+  border-left: 1px solid #E5E5E5;
+  border-bottom: 1px solid #E1E4E6;
+}
+/*.divarticle>pre>.tablearticle*/
+.divarticle>pre{
+  margin:0px;
+}
+pre>.tablearticle{/*reduce same class not in a level*/
+  border-spacing:0px;
+}
+/*.tablearticle>(.tduserinfo=.tdarticle)*/
+.tduserinfo{
+  width: 130px;
+  text-align: center;
+  padding: 15px 0;
+  background: #fafbfc;
+}
+.tdarticle{
+  float: left;
+  width: 568px;
+  padding: 24px 20px 7px 20px;
+}
+/*.tduserinfo>(a=img=(.tablearticle>tbody))*/
+.tduserinfo>a{
+  display:none;
+}
+.tduserinfo>img{
+  display:none;
+}
+.tduserinfo>.tablearticle>tbody{
+  display:none;
+}
+.tduserinfo>.tablearticle{
+  height:40px;
+}
+/*new:.tduserinfo>(.p_user_face=.user_name_div=.l_badge)*/
+.p_user_face{
+  display: block;
+  background: none repeat scroll 0 0 #FFF;
+  border: 1px solid #CCC;
+  display: inline-block;
+  height: 80px;
+  padding: 3px;
+  width: 80px;
+}
+.p_user_face>img{
+  width:80px;
+  height:80px;
+  padding:0px;
+}
+.user_name_div{
+  line-height:22px;
+  margin:10px;
+}
+/*.tdarticle>(.prearticle=p)*/
+.prearticle{
+  display:none;
+}
+.tdarticle>p {
+  font: 12px/18px Arial,SimSun;
+  font-size: 14px;
+  line-height: 22px;
+  margin:0px;
+}
+/*user_rank start*/
+	.l_badge {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-top: 9px
+}
+
+.d_badge {
+    background: url(http://tb2.bdstatic.com/tb/static-pb/img/pb_css_pic.png?t=1425627592071) no-repeat -72px -120px;
+    cursor: pointer;
+    height: 25px;
+    line-height: 25px;
+    margin: 0 auto;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 85px
+}
+
+.d_badge_bright {
+    display: block;
+    background: #fff;
+    border: solid 1px #e6e6e6;
+    width: 98px;
+    height: 28px;
+    line-height: 24px;
+    cursor: pointer;
+    position: relative;
+    margin: 0 auto
+}
+
+.d_badge_bright .d_badge_title {
+    height: 28px;
+    line-height: 28px
+}
+
+.d_badge_title {
+    color: #4c4c4c;
+    position: absolute;
+    text-align: center;
+    width: 60px;
+    height: 25px;
+    line-height: 25px;
+    left: 0;
+    font-size:12px;
+    font-family: arial,SimSun
+}
+
+.d_badge_bright .d_badge_lv {
+    left: 67px;
+    margin-top: 2px
+}
+.d_badge_lv {
+    left: 60px;
+    color: #B65E00;
+    font-size: 11px;
+    font-weight: 700;
+    position: absolute;
+    text-align: left;
+    padding-left: 8px;
+    width: 25px;
+    height: 25px;
+    line-height: 18px;
+    font-family: arial
+}
+.d_badge_lz_icon .d_badge_lv {
+    background: url(http://tb2.bdstatic.com/tb/static-puser/widget/pb_author/img/grade_groups_a0f2ce3.png) 0 -719px no-repeat;
+    text-indent: -999px
+}
+.d_badge_icon .d_badge_lv {
+    background: url(http://tb2.bdstatic.com/tb/static-puser/widget/pb_author/img/s2_1d1b36a.gif) no-repeat;
+    padding-top: 3px
+}
+/*user rank end*/
+/*title*/
+.articletopinfo{
+    display:none;
+}
+.core_title {
+  height: 56px;
+  line-height: 56px;
+  background: #FFF;
+  border-left: 1px solid #E5E5E5;
+  border-bottom: 1px solid #BBBDBF;
+  width:739px;
+  margin:0px auto;
+}
+.core_title .core_title_txt {
+  float: left;
+  display: inline;
+  font-family: "Microsoft Yahei",STHeiti,Arial,SimSun;
+  font-size: 16px;
+  font-weight: 400;
+  margin:0px;
+  margin-left: 20px;
+  width:470px;
+  text-align:left;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.core_title_btns {
+  height: 25px;
+  padding: 0px;
+  margin: 15px 0px 15px 0;
+  float: right;
+}
+.core_title_btns li {
+  float: left;
+  margin-right: 10px;
+  display: inline;
+}
+.l_lzonly {
+  background: url(http://tb2.bdstatic.com/tb/static-ppb/img/pb_css_pic_a630a08.png) no-repeat -8px -7px;
+}
+.l_lzonly {
+  width: 67px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  display: block;
+  text-decoration: none;
+  color: #000;
+}
+.l_lzonly p{
+    margin:0px;
+    padding:0px;
+}
+.j_quick_reply{
+    padding-left:20px;
+    /*background: url(http://tb2.bdstatic.com/tb/static-ppb/img/pb_css_pic_a630a08.png) no-repeat -167px -8px;*/
+}
