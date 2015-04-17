@@ -1,12 +1,55 @@
-  /**
-   *util 
-   */
+url_redirect();
+$(function(){
+  modify_page();
+});
+/**
+ *util 
+ */
+var myutil = {
   //转意符换成普通字符
-  function escape2Html(str) {
+  escape2Html: function (str) {
+    if('string' != typeof(str)) return str;
     var arrEntities={'lt':'<','gt':'>','nbsp':' ','amp':'&','quot':'"'};
-    return str;
-    //return str.replace(/&(lt|gt|nbsp|amp|quot);/ig,function(all,t){return arrEntities[t];});
+    var new_str = str.replace(/&(lt|gt|nbsp|amp|quot);/ig,function(all,t){
+      return arrEntities[t];
+    })
+    return new_str;
   }
+}
+/**
+ *url
+ *现在不确定那种办法更好，待修改
+ */
+function url_redirect() {
+  var redirect_list = [
+    {'from': /([\s\S]+?.cn)\/main.html([\s\S]*)/, 'to': '$1/bbsmain.html'},
+    {'from': /([\s\S]+?.cn)\/cgi-bin\/bbsdoc\?board=([\s\S]+?)/, 'to': '$1/cgi-bin/bbsnewtdoc?board=$2'},
+    //{'from': /([\s\S]+?.cn)\/cgi-bin\/bbscon\?board=([\s\S]+?)/, 'to': ''}
+  ];
+  for(i in redirect_list) {
+    var path_name = window.location.href;
+    var redir_from = redirect_list[i].from;
+    var redir_to = redirect_list[i].to;
+    if(redir_from.test(path_name)) {
+      var new_path_name = path_name.replace(redir_from, redir_to);
+      window.location.href = new_path_name;
+    }
+  }
+}
+
+function modify_page() {
+  var page_list = [
+    {'page': /^\/cgi-bin\/bbsnewtcon/, 'callback': modify_topic_page},
+  ];
+  for(i in page_list) {
+    var page_reg = page_list[i].page;
+    var callback_func = page_list[i].callback;
+    var path_name = window.location.pathname;
+    if(page_reg.test(path_name)) callback_func();
+  }
+}
+
+var modify_topic_page = function modify_topic_page() {
   /**
    *structure
    */
@@ -37,19 +80,19 @@
   var title_btns = $('<ul class="core_title_btns"></ul>');
   //
   var lz_article_link_temp = $('.prearticle').eq(0).html().match(/本篇全文<\/a>\] \[<a href="([\s\S]+?)">只看该作者<\/a>/);
-  var title_lz_link = escape2Html(lz_article_link_temp[1]);
+  var title_lz_link = myutil.escape2Html(lz_article_link_temp[1]);
   var title_btns_lz = $('<li><a href="#" class="l_lzonly"><p>只看楼主</p></a></li>');
   title_btns_lz.find('a.l_lzonly').eq(0).attr('href', title_lz_link);
   title_btns.append(title_btns_lz);
   //fuck
   var all_article_link_temp = $('#main>a').attr('href');
-  var title_all_link = escape2Html(all_article_link_temp);
+  var title_all_link = myutil.escape2Html(all_article_link_temp);
   var title_btns_all = $('<li><a href="#" class="l_lzonly"><p>所有帖子</p></a></li>');
   title_btns_all.find('a.l_lzonly').eq(0).attr('href', title_all_link);
   title_btns.append(title_btns_all);
   //
   var reply_article_link_temp = $('.prearticle').eq(0).html().match(/<a href="([\s\S]+?)">回贴<\/a>/);
-  var title_reply_link = escape2Html(reply_article_link_temp[1]);
+  var title_reply_link = myutil.escape2Html(reply_article_link_temp[1]);
   var title_btns_reply = $('<li><a href="#" class="l_lzonly id="reply"><p class="j_quick_reply">回复</p></a></li>');
   title_btns_reply.find('a.l_lzonly').eq(0).attr('href', title_reply_link);
   title_btns.append(title_btns_reply);
@@ -116,7 +159,7 @@
   /**
    * footer
    */
-  
+}
   
   
   

@@ -5,13 +5,13 @@
       "include_globs" : [ "*" ],
       "all_frames": true,
       "js" : ["jquery-2.1.3.js", "byhh2tieba.js"],
-      "matches" : [ "http://bbs.whnet.edu.cn/*" ],
-      "run_at": "document_end"
+      "matches" : [ "http://www.byhh.cn/*"],
+      "run_at": "document_start"
    }],
    "converted_from_user_script": true,
    "name": "byhh2tieba",
    "description": "change byhh",
-   "permissions": [ "http://bbs.whnet.edu.cn/*" ],
+   "permissions": [ "http://bbs.whnet.edu.cn/*", "http://www.byhh.cn/*" ],
    "manifest_version": 2,
    "version": "1.1.2"
 }
