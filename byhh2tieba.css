@@ -1,84 +1,56 @@
 /*in bbsnewtcon*/
-/*don't display old style*/
-#main>#title, #main>hr{
-  display:none;
-}
 /*body>#main>#post*/
 body{
+  display:none;
   background: #FFF;
 }
-body>div{
-    display:none;
+body.inited{
+  display: inherit;
 }
-#main{
-  background: url(http://tb2.bdstatic.com/tb/static-ppb/img/bright_default_skin_2a916f3.jpg) no-repeat top center;;
-}
-#post{
+#b2t_page_wrap{
   width:980px;
   margin: 0 auto;
   background: #F5F7FA;
 }
-/*#post>(#post_top=#post_main=#post_foot)*/
-#post_top{
+#b2t_page_wrap p,#b2t_page_wrap ul,#b2t_page_wrap pre{
+  margin: 0px;
+  padding: 0px;
+}
+#b2t_page_top{
     height:120px;
 }
-#post_main{
-    width:980px;
-}
-#post>#post_foot{
+#b2t_page_foot{
     height:120px;
 }
-/*#post_main>(#post_main_notside=#post_main_side)*/
-#post_main_notside{
+#b2t_page_main_notside{
     width:739px;
 }
-#post_main_side{
+#b2t_page_main_side{
     width:240px;
 }
-/*post_main_notside>(#title=.articletopinfo=.divarticle=p)*/
-#post_main_notside>p{
-  margin:0px;
-}
-#post_main_notside .divarticle{
+#b2t_topic_post_list_wrap{
   width: 739px;
   background: #fff;
   border: 0px;
   border-left: 1px solid #E5E5E5;
   border-bottom: 1px solid #E1E4E6;
 }
-/*.divarticle>pre>.tablearticle*/
-.divarticle>pre{
-  margin:0px;
-}
-pre>.tablearticle{/*reduce same class not in a level*/
-  border-spacing:0px;
-}
-/*.tablearticle>(.tduserinfo=.tdarticle)*/
-.tduserinfo{
+#b2t_post_user_wrap{
+  float: left;
   width: 130px;
   text-align: center;
   padding: 15px 0;
   background: #fafbfc;
 }
-.tdarticle{
+#b2t_post_article_wrap{
   float: left;
   width: 568px;
   padding: 24px 20px 7px 20px;
 }
-/*.tduserinfo>(a=img=(.tablearticle>tbody))*/
-.tduserinfo>a{
-  display:none;
-}
-.tduserinfo>img{
-  display:none;
-}
-.tduserinfo>.tablearticle>tbody{
-  display:none;
-}
-.tduserinfo>.tablearticle{
-  height:40px;
-}
 /*new:.tduserinfo>(.p_user_face=.user_name_div=.l_badge)*/
+.p_author li{
+  list-style-type: none;
+}
 .p_user_face{
   display: block;
   background: none repeat scroll 0 0 #FFF;
@@ -93,19 +65,9 @@ pre>.tablearticle{/*reduce same class not in a level*/
   height:80px;
   padding:0px;
 }
-.user_name_div{
+.user_name{
   line-height:22px;
-  margin:10px;
-}
-/*.tdarticle>(.prearticle=p)*/
-.prearticle{
-  display:none;
-}
-.tdarticle>p {
-  font: 12px/18px Arial,SimSun;
-  font-size: 14px;
-  line-height: 22px;
-  margin:0px;
+  margin:10px 0px;
 }
 /*user_rank start*/
 	.l_badge {

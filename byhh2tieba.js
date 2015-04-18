@@ -1,6 +1,7 @@
 url_redirect();
 $(function(){
   modify_page();
+  $('body').addClass('inited');
 });
 /**
  *util 
@@ -40,130 +41,192 @@ function url_redirect() {
 function modify_page() {
   var page_list = [
     {'page': /^\/cgi-bin\/bbsnewtcon/, 'callback': modify_topic_page},
+    {'page': /^\/cgi-bin\/bbsnewtdoc/, 'callback': modify_list_page},
+    {'page': /^\/cgi-bin\/bbsmain.html/, 'callback': modify_home_page},
   ];
   for(i in page_list) {
     var page_reg = page_list[i].page;
     var callback_func = page_list[i].callback;
     var path_name = window.location.pathname;
-    if(page_reg.test(path_name)) callback_func();
+    if(page_reg.test(path_name)) {
+      modify_init();
+      callback_func();
+    }
   }
+}
+var modify_init = function modify_init() {
+  $('body').children().wrapAll('<div id="b2t_wrap"></div>');
 }
 
 var modify_topic_page = function modify_topic_page() {
-  /**
-   *structure
+  b2t_wrap = $('#b2t_wrap');
+  b2t_wrap.children().wrapAll('<div id="b2t_page_wrap_old"></div>');
+  $('#b2t_page_wrap_old').hide();//隐藏老的界面
+  //structure创建结构
+  var page_wrap = get_topic_page_dom();
+  /** 
+   *page_main_notside
    */
-  var page_main = $('#main');
-  page_main.wrapInner('<div id="post_main"><div>');
-  page_main.wrapInner('<div id="post"></div>');
-  var post_main = $('#post_main');
-  $('<div id="post_top"></div>').insertBefore(post_main);
-  $('<div id="post_foot"></div>').insertAfter(post_main);
-  $('#post_main>div').attr('id', 'post_main_notside');
-  post_main.append($('<div id="post_main_side"></div>'));
-  page_main.css('display','block');
-  /**
-   * topic title
-   */
-  var topic_title = $('.articletopinfo');
-  var topic_title_html = topic_title.html();
-  var topic_title_match = topic_title_html.match(/<a href="([\s\S]+?)">([\s\S]+?)<\/a>/g);
-  var topic_detail = [];
-  for(var i=0;i<4;i++){
-      topic_detail[i] = topic_title_match[i].match(/<a href="([\s\S]+?)">([\s\S]+?)<\/a>/);
-  }
-  var title_wrap = $('<div class="core_title"></div>');
-  var title_h1_content_temp = topic_detail[3][2].match(/\《([\s\S]+?)\》/);
-  var title_h1_content = title_h1_content_temp[1];
-  var title_h1 = $('<h1 class="core_title_txt"></h1>').text(title_h1_content);
-  title_wrap.append(title_h1);
-  var title_btns = $('<ul class="core_title_btns"></ul>');
-  //
+  //get old title detail array
+  var byhh_title_match = $('.articletopinfo').html().match(/<a href="([\s\S]+?)">([\s\S]+?)<\/a>/g);
+  var byhh_title_array = [];
+  byhh_title_match.map(function(item,i){
+    byhh_title_array[i] = item.match(/<a href="([\s\S]+?)">([\s\S]+?)<\/a>/);
+  });
+  //get topic tilte
+  var topic_title_content_temp = byhh_title_array[3][2].match(/\《([\s\S]+?)\》/);
+  var topic_title_content = topic_title_content_temp[1];
+  //get only_lz link
   var lz_article_link_temp = $('.prearticle').eq(0).html().match(/本篇全文<\/a>\] \[<a href="([\s\S]+?)">只看该作者<\/a>/);
-  var title_lz_link = myutil.escape2Html(lz_article_link_temp[1]);
-  var title_btns_lz = $('<li><a href="#" class="l_lzonly"><p>只看楼主</p></a></li>');
-  title_btns_lz.find('a.l_lzonly').eq(0).attr('href', title_lz_link);
-  title_btns.append(title_btns_lz);
-  //fuck
-  var all_article_link_temp = $('#main>a').attr('href');
-  var title_all_link = myutil.escape2Html(all_article_link_temp);
-  var title_btns_all = $('<li><a href="#" class="l_lzonly"><p>所有帖子</p></a></li>');
-  title_btns_all.find('a.l_lzonly').eq(0).attr('href', title_all_link);
-  title_btns.append(title_btns_all);
-  //
+  var lz_article_link = myutil.escape2Html(lz_article_link_temp[1]);
+  //get all_article_list_link
+  var all_article_list_link_temp = $('#main>a').attr('href');
+  var all_article_list_link = myutil.escape2Html(all_article_list_link_temp);
+  //get replay article link
   var reply_article_link_temp = $('.prearticle').eq(0).html().match(/<a href="([\s\S]+?)">回贴<\/a>/);
-  var title_reply_link = myutil.escape2Html(reply_article_link_temp[1]);
-  var title_btns_reply = $('<li><a href="#" class="l_lzonly id="reply"><p class="j_quick_reply">回复</p></a></li>');
-  title_btns_reply.find('a.l_lzonly').eq(0).attr('href', title_reply_link);
-  title_btns.append(title_btns_reply);
-  title_wrap.append(title_btns);
-  var title_after = $('.divarticle').eq(0);
-  title_wrap.insertBefore(title_after);
-  /**
-   *user info 
-   */
-  var user_info_list = document.querySelectorAll('.tduserinfo');
-  for(var i=0;i<user_info_list.length;i++){
-    var user_info = user_info_list[i];
-    var user_name = user_info.getElementsByTagName('a')[0];
-    var user_face = user_info.getElementsByTagName('img')[0];
-    var user_detail = user_info.getElementsByTagName('table')[0];
-    var user_id_href = user_name.getAttribute('href');
-    //
-    var user_face_link = document.createElement('a');
-    user_face_link.setAttribute('class', 'p_user_face');
-    user_face_link.setAttribute('href', user_id_href);
-    user_face_link.appendChild(user_face);
-    //
-    user_info.insertBefore(user_face_link, user_detail);
-    var user_name_container = document.createElement('div');
-    user_name_container.setAttribute('class', 'user_name_div');
-    user_name_container.appendChild(user_name);
-    user_info.insertBefore(user_name_container, user_detail);
-    //
-    var user_detail_html = user_detail.innerHTML;
-    user_detail_rank = user_detail_html.match(/<td>等级：<\/td><td>([\w\W]+?)<\/td>/)[1];
-    user_detail_experience = user_detail_html.match(/<td>积分：<\/td><td>([\w\W]+?)<\/td>/)[1];
-    var user_is_lz = (0 === i) ? true : false;
-    var user_rank_container = document.createElement('div');
-    user_rank_container.setAttribute('class', 'l_badge');
-    var user_rank_wrap = document.createElement('div');
-    user_rank_wrap.setAttribute('class', 'p_badge');
-    var user_rank_a = document.createElement('a');
-    var user_rank_class = user_is_lz ? 'user_badge d_badge_bright d_badge_lz_icon' : 'user_badge d_badge_bright d_badge_icon';
-    user_rank_a.setAttribute('class', user_rank_class);
-    user_rank_a.setAttribute('title', '积分 '+user_detail_experience);
-    var user_rank_a_title = document.createElement('div');
-    user_rank_a_title.setAttribute('class', 'd_badge_title');
-    user_rank_a_title.innerText = user_detail_rank;
-    var user_rank_a_badge = document.createElement('div');
-    user_rank_a_badge.setAttribute('class', 'd_badge_lv');
-    user_rank_a.appendChild(user_rank_a_title);
-    user_rank_a.appendChild(user_rank_a_badge);
-    user_rank_wrap.appendChild(user_rank_a);
-    user_rank_container.appendChild(user_rank_wrap);
-    user_info.insertBefore(user_rank_container, user_detail);
-  }
-  /**
-   * post article
-   */
-  var post_list = document.getElementsByClassName('prearticle');
-  for(var i=0;i<post_list.length;i++){
-    var html = post_list[i].innerHTML;
-    var content = html.match(/([\s\S]+?)\n\n([\s\S]+?)\n([-]+)\n([\s\S]+?)/);
-    //
-    var new_dom = document.createElement('p');
-    new_dom.innerHTML = content[2];
-    post_list[i].parentNode.appendChild(new_dom);
-  }
-  /**
-   * footer
-   */
+  var reply_article_link = myutil.escape2Html(reply_article_link_temp[1]);
+  //page>main>notside>topic>title_wrap
+  var topic_title_info = {
+    'content': topic_title_content,
+    'lz_link': lz_article_link,
+    'all_link': all_article_list_link,
+    'reply_link': reply_article_link
+  };
+  topic_title_wrap = get_topic_title_dom(topic_title_info);
+  topic_title_wrap.appendTo(page_wrap.find('#b2t_page_main_notside'));
+  //get page post list data
+  var post_detail_list = [];
+  $('pre>.tablearticle').each(function(i, item){
+    var post_detail = [];
+    user_td = $(item).find('.tduserinfo');
+    post_detail['user'] = get_user_info(user_td);
+    article_td = $(item).find('.tdarticle');
+    post_detail['article'] = get_article_info(article_td);
+    post_detail_list[i] = post_detail;
+  });
+  //page>main>notside>topic>article_list_wrap
+  var topic_post_list_wrap = $('<div id="b2t_topic_post_list_wrap"></div>');
+  post_detail_list.map(function(item, i){
+    var topic_post_wrap = $('<div id="b2t_topic_post_wrap"></div>');
+    var post_user_dom = get_post_user_dom(item['user']);
+    var post_article_dom = get_post_article_dom(item['article']);
+    topic_post_wrap.append(post_user_dom).append(post_article_dom);
+    topic_post_wrap.appendTo(topic_post_list_wrap);
+  });
+  topic_post_list_wrap.appendTo(page_wrap.find('#b2t_page_main_notside'));
+  //创建新的界面
+  b2t_wrap.append(page_wrap);
 }
-  
-  
-  
-  
-  
-  
-  
+
+var modify_list_page = function modify_list_page() {
+
+}
+
+var modify_home_page = function modify_home_page() {
+
+}
+  function get_user_info(user_td) {
+    var user_info = {};
+    var user_a = user_td.find('a');
+    var user_img = user_td.find('img');
+    var user_detail_tr_list = user_td.find('.tablearticle tr');
+    user_info.link = user_a.attr('href');
+    user_info.name = user_a.text();
+    user_info.face = user_img.attr('src');
+    user_info.detail = [];
+    user_detail_tr_list.each(function(i, user_detail_tr){
+      td_list = $(user_detail_tr).find('td');
+      key = td_list.eq(0).text();
+      value = td_list.eq(1).text();
+      user_info['detail'][key] = value;
+    });
+    return user_info;
+  }
+
+  function get_article_info(article_td) {
+    var article_info = {};
+    var article_all = article_td.find('.prearticle').html();
+    article_match = article_all.match(/([\s\S]+?)\n\n([\s\S]+?)\n([-]+)\n([\s\S]+?)/);
+    article_info.content = article_match[2];
+    return article_info;
+  }
+
+  function get_topic_page_dom() {
+    var topic_page = $(
+      '\
+      <div id="b2t_page_wrap">\
+        <div id="b2t_page_top"></div>\
+        <div id="b2t_page_main">\
+          <div id="b2t_page_main_notside"></div>\
+          <div id="b2t_page_main_side"><div>\
+        </div>\
+        <div id="b2t_page_foot"></div>\
+      </div>\
+      '
+    );
+    return topic_page;
+  }
+
+  function get_topic_title_dom(title_info) {
+    var title_div = $(
+      '\
+      <div id="b2t_topic_title_wrap" class="core_title">\
+        <h1 id="b2t_title_h1" class="core_title_txt"></h1>\
+        <ul class="core_title_btns">\
+          <li><a href="" class="l_lzonly"><p>只看楼主</p></a></li>\
+          <li><a href="" class="l_lzonly"><p>所有帖子</p></a></li>\
+          <li><a href="" class="l_lzonly id="reply"><p class="j_quick_reply">回复</p></a></li>\
+        </ul>\
+      </div>\
+      '
+    );
+    title_div.find('h1').text(title_info['content']);
+    title_div.find('#core_title_btns li').eq(0).attr('href', title_info['lz_link']);
+    title_div.find('#core_title_btns li').eq(1).attr('href', title_info['all_link']);
+    title_div.find('#core_title_btns li').eq(2).attr('href', title_info['reply_link']);
+    return title_div;
+  }
+
+  function get_post_user_dom(user_info) {
+    var user_div = $(
+      '\
+      <div id="b2t_post_user_wrap">\
+        <ul class="p_author">\
+          <li class="icon">\
+            <a class="p_user_face">\
+              <img src=""/>\
+            </a>\
+          </li>\
+          <li class="d_nameplate"></li>\
+          <li class="user_name">\
+            <a class="" href=""></a>\
+          </li>\
+          <li class="l_badge">\
+            <div class="p_badge">\
+              <a class="user_badge d_badge_bright d_badge_icon" title="">\
+                <div class="d_badge_title"></div>\
+                <div class="d_badge_lv"></div>\
+              </a>\
+            </div>\
+          </li>\
+      '
+    );
+    console.log(user_info);
+    user_div.find('img').attr('src', user_info['face']);
+    user_div.find('.user_name a').attr('href', user_info['link']).text(user_info['name']);
+    user_div.find('.d_badge_title').text(user_info['detail']['等级：']);
+    return user_div;
+  }
+
+  function get_post_article_dom(article_info) {
+    var article_div = $(
+      '\
+      <div id="b2t_post_article_wrap">\
+        <pre></pre>\
+      </div>\
+      <div style="clear:both"></div>\
+      '
+    );
+    article_div.find('pre').html(article_info['content']);
+    return article_div;
+  }
