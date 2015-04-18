@@ -83,8 +83,8 @@ var modify_topic_page = function modify_topic_page() {
   var all_article_list_link_temp = $('#main>a').attr('href');
   var all_article_list_link = myutil.escape2Html(all_article_list_link_temp);
   //get replay article link
-  var reply_article_link_temp = $('.prearticle').eq(0).html().match(/<a href="([\s\S]+?)">回贴<\/a>/);
-  var reply_article_link = myutil.escape2Html(reply_article_link_temp[1]);
+  var reply_article_link_temp = $('#link a').eq(0).attr('href');
+  var reply_article_link = myutil.escape2Html(reply_article_link_temp);
   //page>main>notside>topic>title_wrap
   var topic_title_info = {
     'content': topic_title_content,
@@ -107,7 +107,7 @@ var modify_topic_page = function modify_topic_page() {
   //page>main>notside>topic>article_list_wrap
   var topic_post_list_wrap = $('<div id="b2t_topic_post_list_wrap"></div>');
   post_detail_list.map(function(item, i){
-    var topic_post_wrap = $('<div id="b2t_topic_post_wrap"></div>');
+    var topic_post_wrap = $('<div class="b2t_topic_post_wrap"></div>');
     var post_user_dom = get_post_user_dom(item['user']);
     var post_article_dom = get_post_article_dom(item['article']);
     topic_post_wrap.append(post_user_dom).append(post_article_dom);
@@ -147,6 +147,11 @@ var modify_home_page = function modify_home_page() {
     var article_info = {};
     var article_all = article_td.find('.prearticle').html();
     article_match = article_all.match(/([\s\S]+?)\n\n([\s\S]+?)\n([-]+)\n([\s\S]+?)/);
+    article_send_time_match = article_match[1].match(/\(([0-9]{4})年([0-9]{2})月([0-9]{2})日([0-9]{2}:[0-9]{2}:[0-9]{2}) ([\s\S]+?)\)/);
+    article_info.send_time = article_send_time_match[1]+'-'+article_send_time_match[2]+'-'+article_send_time_match[3]+' '+article_send_time_match[4];
+    article_lou_match = article_match[1].match(/第([1-9]+?楼)/);
+    article_info.lou = article_lou_match ? article_lou_match[1] : '楼主';
+    article_info.reply_link = article_td.find('.prearticle a').eq(0).attr('href');
     article_info.content = article_match[2];
     return article_info;
   }
@@ -154,7 +159,7 @@ var modify_home_page = function modify_home_page() {
   function get_topic_page_dom() {
     var topic_page = $(
       '\
-      <div id="b2t_page_wrap">\
+      <div id="b2t_page_wrap" class="b2t_body">\
         <div id="b2t_page_top"></div>\
         <div id="b2t_page_main">\
           <div id="b2t_page_main_notside"></div>\
@@ -181,16 +186,16 @@ var modify_home_page = function modify_home_page() {
       '
     );
     title_div.find('h1').text(title_info['content']);
-    title_div.find('#core_title_btns li').eq(0).attr('href', title_info['lz_link']);
-    title_div.find('#core_title_btns li').eq(1).attr('href', title_info['all_link']);
-    title_div.find('#core_title_btns li').eq(2).attr('href', title_info['reply_link']);
+    title_div.find('.core_title_btns li a').eq(0).attr('href', title_info['lz_link']);
+    title_div.find('.core_title_btns li a').eq(1).attr('href', title_info['all_link']);
+    title_div.find('.core_title_btns li a').eq(2).attr('href', title_info['reply_link']);
     return title_div;
   }
 
   function get_post_user_dom(user_info) {
     var user_div = $(
       '\
-      <div id="b2t_post_user_wrap">\
+      <div class="b2t_post_user_wrap">\
         <ul class="p_author">\
           <li class="icon">\
             <a class="p_user_face">\
@@ -221,12 +226,65 @@ var modify_home_page = function modify_home_page() {
   function get_post_article_dom(article_info) {
     var article_div = $(
       '\
-      <div id="b2t_post_article_wrap">\
+      <div class="b2t_post_article_wrap">\
         <pre></pre>\
+        <div class="core_reply_wrapper">\
+          <ul>\
+            <li><span class="post_lou">二楼</span></li>\
+            <li><span class="time_span"></span></li>\
+            <li><a  class="reply_link" href="">回复</a></li>\
+          </ul>\
+        </div>\
       </div>\
       <div style="clear:both"></div>\
       '
     );
+    article_div.find('.time_span').text(article_info['send_time']);
+    article_div.find('.post_lou').text(article_info['lou']);
+    article_div.find('.reply_link').attr('href', article_info['reply_link']);
     article_div.find('pre').html(article_info['content']);
     return article_div;
+  }
+
+  function get_footer_pager_dom(pager_info) {
+    var pager_dom = $(
+      '\
+      <div class="p_thread">\
+        <div class="l_thread_info">\
+          <ul class="l_posts_num">\
+            <li class="l_pager"></li>\
+            <li class="l_reply_num">\
+              <span class="red"></span>回复贴，共<span class="red"></span>页\
+            </li>\
+            <li class="l_reply_num"></li>\
+          </ul>\
+        </div>\
+        <div id="tofrs_up" class="tofrs_up">\
+          <a href="">&lt;&lt;返回<span></span>讨论区</a>\
+        </div>\
+      </div>\
+      '
+    );
+    pager_dom.find('.l_pager').append(get_footer_pager_list_dom(pager_info['page_list']).children());
+    pager_dom.find('.l_reply_num span').eq(0).text(pager_info['post_number']);
+    pager_dom.find('.l_reply_num span').eq(1).text(pager_info['page_number']);
+    pager_dom.find('.tofrs_up a').attr('href', pager_info['board_link']).text(pager_info['board_name']);
+    return pager_dom;
+  }
+
+  function get_footer_pager_list_dom(pager_list) {
+    var dom_wrap = $('<div>');
+    var single_pager = $('<a href=""></a>');
+    var single_pager_span = $('<span class="selectd"></span>');
+    pager_list.map(function(item, i){
+      var single_dom;
+      if(!item.link) {
+        single_dom = single_pager_span.clone();
+        dom_wrap.append(single_dom.text(item.value));
+      }else{
+        single_dom = single_pager.clone();
+        dom_wrap.append(single_dom.attr('href', item.link).text(item.value));
+      }
+    });
+    return dom_wrap;
   }

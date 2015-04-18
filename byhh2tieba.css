@@ -12,9 +12,9 @@ body.inited{
   margin: 0 auto;
   background: #F5F7FA;
 }
-#b2t_page_wrap p,#b2t_page_wrap ul,#b2t_page_wrap pre{
-  margin: 0px;
+.b2t_body ul,.b2t_body p,.b2t_body pre {
   padding: 0px;
+  margin: 0px;
 }
 #b2t_page_top{
     height:120px;
@@ -35,14 +35,19 @@ body.inited{
   border-left: 1px solid #E5E5E5;
   border-bottom: 1px solid #E1E4E6;
 }
-#b2t_post_user_wrap{
+.b2t_topic_post_wrap {
+  border: 0;
+  border-left: 1px solid #E5E5E5;
+  border-bottom: 1px solid #E1E4E6;
+}
+.b2t_post_user_wrap{
   float: left;
   width: 130px;
   text-align: center;
   padding: 15px 0;
   background: #fafbfc;
 }
-#b2t_post_article_wrap{
+.b2t_post_article_wrap{
   float: left;
   width: 568px;
   padding: 24px 20px 7px 20px;
@@ -145,9 +150,6 @@ body.inited{
 }
 /*user rank end*/
 /*title*/
-.articletopinfo{
-    display:none;
-}
 .core_title {
   height: 56px;
   line-height: 56px;
@@ -171,7 +173,8 @@ body.inited{
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.core_title_btns {
+ul.core_title_btns {
+  margin-top: 15px;
   height: 25px;
   padding: 0px;
   margin: 15px 0px 15px 0;
@@ -201,4 +204,20 @@ body.inited{
 .j_quick_reply{
     padding-left:20px;
     /*background: url(http://tb2.bdstatic.com/tb/static-ppb/img/pb_css_pic_a630a08.png) no-repeat -167px -8px;*/
+}
+.core_reply_wrapper {
+  position: relative;
+  line-height: 28px;
+  height: 28px;
+  margin-top: 30px;
+  margin-right:20px; 
+}
+.core_reply_wrapper ul {
+  list-style: none;
+  float: right;
+}
+.core_reply_wrapper ul li {
+  display: inline;
+  margin-left: 6px;
+  color: #999;
 }
