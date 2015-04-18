@@ -24,15 +24,15 @@ function url_redirect() {
   var redirect_list = [
     {'from': /([\s\S]+?.cn)\/main.html([\s\S]*)/, 'to': '$1/bbsmain.html'},
     {'from': /([\s\S]+?.cn)\/cgi-bin\/bbsdoc\?board=([\s\S]+?)/, 'to': '$1/cgi-bin/bbsnewtdoc?board=$2'},
-    //{'from': /([\s\S]+?.cn)\/cgi-bin\/bbscon\?board=([\s\S]+?)/, 'to': ''}
+    {'from': /([\s\S]+?.cn)\/cgi-bin\/bbscon\?board=([\s\S]+?)&file=([\s\S]+?)&([\s\S]+)/, 'to': '$1/cgi-bin/bbsnewtcon?board=$2&file=$3'}
   ];
   for(i in redirect_list) {
-    var path_name = window.location.href;
+    var href_path = window.location.href;
     var redir_from = redirect_list[i].from;
     var redir_to = redirect_list[i].to;
-    if(redir_from.test(path_name)) {
-      var new_path_name = path_name.replace(redir_from, redir_to);
-      window.location.href = new_path_name;
+    if(redir_from.test(href_path)) {
+      var new_href_path = href_path.replace(redir_from, redir_to);
+      window.location.href = new_href_path;
     }
   }
 }
